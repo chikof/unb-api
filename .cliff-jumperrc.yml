@@ -1,0 +1,6 @@
+name: unb-api
+packagePath: .
+org: chikoshidori
+monoRepo: false
+commitMessageTemplate: 'chore(release): release {{new-version}}'
+tagTemplate: v{{new-version}}
