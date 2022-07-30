@@ -1,3 +1,7 @@
-export const main = () => 'this builds and pushes';
-
-export default main;
+/**
+ * The [@chikoshidori/unb-api](https://github.com/chikoshidori/unb-api) version that you are currently using.
+ *
+ * Note to unb-api developers: This needs to explicitly be `string` so it is not typed as the string that gets replaced by Rollup
+ */
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+export const version: string = '[VI]{version}[/VI]';

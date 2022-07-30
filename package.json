@@ -26,6 +26,8 @@
 		"postpack": "pinst --enable"
 	},
 	"dependencies": {
+		"@sapphire/fetch": "^2.4.1",
+		"@sapphire/ratelimits": "^2.4.4",
 		"tslib": "^2.4.0"
 	},
 	"devDependencies": {
