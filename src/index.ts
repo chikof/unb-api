@@ -1,3 +1,6 @@
+export * from './lib/Client';
+export * from './lib/structures/User';
+
 /**
  * The [@chikoshidori/unb-api](https://github.com/chikoshidori/unb-api) version that you are currently using.
  *
