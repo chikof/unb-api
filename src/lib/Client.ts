@@ -1,6 +1,7 @@
 import { FetchMethods } from '@sapphire/fetch';
 import { RequestHandler } from './structures/RequestHandler';
-import { User } from './structures/User';
+import { User, type UserAPIResponse } from './structures/User';
+import type { EditUserBalanceData, SetUserBalanceData } from './types/User';
 
 export interface UnbClientOptions {
 	/**
@@ -25,16 +26,24 @@ export interface UnbClientOptions {
 	maxRetries: number;
 }
 
+const reason = '@chikoshidori/unb-api did this.';
+
+/**
+ * The client for the Unbelievable Boat API.
+ */
 export class UnbCLient {
 	private readonly requestHandler = new RequestHandler(this);
 
 	public constructor(
 		/**
-		 * Your api token. You may get one [here](https://unbelievaboat.com/api/docs).
+		 * - Your api token. You may get one [here](https://unbelievaboat.com/api/docs).
 		 * @type {String}
 		 */
 		public readonly token: string,
 
+		/**
+		 * - The options for the api client.
+		 */
 		public readonly options: UnbClientOptions = {
 			baseURL: 'https://unbelievaboat.com/api',
 			version: 'v1',
@@ -45,38 +54,61 @@ export class UnbCLient {
 	}
 
 	/**
-	 * Increase or decrease the User's balance by a value given in the params
+	 * Get a users balance.
+	 *
+	 * @param {string} guildId - The guild id to get from.
+	 * @param {string} userId - The user id to get.
 	 * @example
-	 * <Client>.editUserBalance('123456789012345678', '123456789012345678', {
-		reason: '@chikoshidori/unb-api did this.',
-		cash: '-100'
-	});
-	*/
-	public async editUserBalance(guildId: string, userId: string, data: EditUserBalanceData = { reason: '@chikoshidori/unb-api did this.' }) {
-		return this._request(FetchMethods.Patch, `guilds/${guildId}/users/${userId}`, data).then((data) => new User(data));
+	 * <Client>.getUserBalance('446335359664783370', '462780441594822687');
+	 *
+	 * @see {@link https://unbelievaboat.com/api/docs#get-user-balance|Get User Balance}
+	 */
+	public async getUserBalance(guildId: string, userId: string): Promise<User> {
+		const response = await this._request<UserAPIResponse>(FetchMethods.Get, `guilds/${guildId}/users/${userId}`);
+
+		return new User(response);
 	}
 
-	private async _request(method: FetchMethods, endpoint: string, body = {}) {
-		return this.requestHandler.request(method, endpoint, body);
+	/**
+	 * Increase or decrease a user's balance by the cash and bank values given.
+	 * Use negative values to decrease.
+	 *
+	 * @param {string} guildId - The guild id to use.
+	 * @param {string} userId - The user id to modify the balance of.
+	 * @example
+	 * <Client>.editUserBalance('446335359664783370', '462780441594822687', {
+	 *    reason: '@chikoshidori/unb-api did this.',
+	 *    cash: '-100'
+	 * });
+	 *
+	 * @see {@link https://unbelievaboat.com/api/docs#patch-user-balance|Patch User Balance}
+	 */
+	public async editUserBalance(guildId: string, userId: string, data: EditUserBalanceData = { reason }): Promise<User> {
+		const response = await this._request<UserAPIResponse>(FetchMethods.Patch, `guilds/${guildId}/users/${userId}`, data);
+
+		return new User(response);
 	}
-}
-
-export interface EditUserBalanceData {
-	/**
-	 * The amount of cash to add to the user's balance.
-	 * @type {number}
-	 */
-	cash?: number | string;
 
 	/**
-	 * The amount of bank to add to the user's balance.
-	 * @type {number}
+	 * Set a users balance to the provided values.
+	 *
+	 * @param {string} guildId - The guild id to use.
+	 * @param {string} userId - The user id to set the balance of.
+	 * @example
+	 * <Client>.setUserBalance('446335359664783370', '462780441594822687', {
+	 *    reason: '@chikoshidori/unb-api did this.',
+	 *    cash: 100
+	 * });
+	 *
+	 * @see {@link https://unbelievaboat.com/api/docs#put-user-balance|Put User Balance}
 	 */
-	bank?: number | string;
+	public async setUserBalance(guildId: string, userId: string, data: SetUserBalanceData = { reason }): Promise<User> {
+		const response = await this._request<UserAPIResponse>(FetchMethods.Put, `guilds/${guildId}/users/${userId}`, data);
 
-	/**
-	 * Audit log reason
-	 * @type {string}
-	 */
-	reason?: string;
+		return new User(response);
+	}
+
+	private async _request<T = unknown>(method: FetchMethods, endpoint: string, body = {}): Promise<T> {
+		return this.requestHandler.request(method, endpoint, body) as Promise<T>;
+	}
 }

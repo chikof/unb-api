@@ -4,6 +4,7 @@ export interface UserAPIResponse {
 	 * @type {?number}
 	 */
 	rank: number;
+
 	/**
 	 * User ID of the discord user.
 	 * @type {string}
@@ -49,8 +50,7 @@ export class User implements UserAPIResponse {
 	public rawData!: { value: UserAPIResponse };
 
 	public constructor(data: UserAPIResponse) {
-		Object.assign(this, data);
-		Object.defineProperty(this, 'rawData', { value: data });
+		Object.assign(this, { ...data, rawData: { value: data } });
 	}
 
 	public get id() {

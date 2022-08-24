@@ -1,4 +1,5 @@
 export * from './lib/Client';
+export * from './lib/types/User';
 export * from './lib/structures/User';
 
 /**
