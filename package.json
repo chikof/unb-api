@@ -27,7 +27,7 @@
 	},
 	"dependencies": {
 		"@sapphire/fetch": "^2.4.1",
-		"@sapphire/ratelimits": "^2.4.4",
+		"@sapphire/ratelimits": "^2.4.5",
 		"tslib": "^2.4.0"
 	},
 	"devDependencies": {
