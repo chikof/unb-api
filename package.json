@@ -16,7 +16,7 @@
 		"format": "prettier --write {src,scripts}/**/*.ts",
 		"docs": "typedoc",
 		"update": "yarn upgrade-interactive",
-		"build": "tsc -b src && rollup -c scripts/rollup.bundle.ts && gen-esm-wrapper dist/index.js dist/index.mjs",
+		"build": "tsc -b src && rollup --config rollup.config.mjs && gen-esm-wrapper dist/index.js dist/index.mjs",
 		"clean": "tsc -b src --clean",
 		"watch": "tsc -b src -w",
 		"bump": "cliff-jumper",
